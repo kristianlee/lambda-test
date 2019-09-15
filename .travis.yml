@@ -1,0 +1,25 @@
+language: python
+python:
+- '3.7'
+branches:
+  only: master
+install:
+- pip install awscli
+- pip install aws-sam-cli
+script:
+- sam validate
+- sam package --template-file template.yaml --s3-bucket kristian-lambda-artifacts --output-template-file packaged.yaml
+deploy:
+  provider: script
+  script: sam deploy --template-file packaged.yaml --stack-name travis-serverless-test
+  skip_cleanup: true
+  on:
+    branch: master
+notifications:
+  email:
+    on_failure: always
+env:
+  global:
+  - AWS_DEFAULT_REGION=eu-west-1
+  - secure: "KbXwBdThQY46Sj/2jKIUi/lEWNcrNfjo34kddFGJLGbuIy6g5IjLNfTodktD1UU2whP28JyLXDJYweXWvLkSzQ4j/Hqvzzqy+EqXo73OnNSD0IXw/XNRPZjgGm+LxONnctAZkiuMjSEAKEt3chaKeKix/mswpEzgVtmOn/vwTy/7flwapYzQ46Za05c+hHXFQ9c5Y8y61Pk3hKvI3cpi/OzQ5bWQo7pbshzrCunw1NVs4uYxzlJaF86e065B7/Jzb6kByuxB+YP7WyPCHWtfjmJcjSJ54QwNLV24bd+yUSUyxdhZD0F5LhDJqminH2hBJti2QxRCFV1CcSPovghxYjPtoqTHIN29cYW4FVr2JeCbosEIAVXmimKhU4wpau9GAeh375wGtfy1xnujWXMXXQuXUWAA5Jel4VKngHZtrBO6lDnRnJOeq2hkzkeGQMSY1k9ZpDDd4B2jP/nWfoDo9ObCjnVR5RT0BdzJhaycAJib7X8qY5OvKbeN1xq470F7puxCA+l69X5r5aC2z8x77k4h5IFb3oUoCzzw0toYhtmTnNcSGXm3o2gdxVTOWnt9vYP7+ZPgyP6mQAQ7DcC3W7mg9k0F6pjw1vGkHOjPKNt/bPrrc6tMOoGKxyMFgmUglbpYdYnTiR0vriDPqe2m+EFi+9U8gkQ0El7dJle4Uu8="
+  - secure: "t886FI8Xpu/sfFjej5Rk5xkSfO4ng+yMdeKB4T6kdmQ2O+DtcrQ7a35A/gmgQvRzVGt9R1uTtIU47ZRwRGNFqR9DoDOR8vVtdUizhiKbkpo056Rd3NKO4ZmYHxty/NQuaHKd2i45J9JeFj9En0IFGq4BBVbrTqPX6jqO+n439GeVwfndyWqhUJlVhEU3bLIKgZDsyN2B12ATNJ/qocDVbEglgoAnPU2ylKFA2oTzqJ6lU/QhTezgMJgKE/VWQrs67hU77u0rMVSN5ErheDQhFUnHvMZWFGTTZpvxHDBIpR6C7iseFiRXTGP7/c+szrdFPrhbIgNzEDjxxZ+TqSqDLI6ee+k7nKDapTyPk5+dKE1RDwRaLeSCU70X9CRPrB7v2DiLTQ4kdwxpRoNZ6wCjJxHlrIAhhtNSdBew8b6pEigGvVKncHVywMTnV/CcVArqcZ0tbSPGeBUwhDLIKl0UAp15yP5+zFmvpckppIgl/nRzSWxhNP4QsVldGv5bEZNbmIUJz+mFcaiGPQyMMxXj9xVOtMLM9167WvCP+vxcuQnh4AqL1wO47p9m/KRHpOYCTUiqvklCFMtR0tovGrDn2wHDvmOadP2LvBoQvBwfS4gS+mNfzrKqW2AZvXHPSU+G/t98biYR4gJtE6zsbC9Tn+40Jbj/Gu6I55ivtpCjYy8="
